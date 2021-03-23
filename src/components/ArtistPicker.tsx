@@ -12,7 +12,7 @@ import { ScreenContext } from "./pages/Home";
 export type ArtistList = [Artist | null, Artist | null, Artist | null];
 
 type Props = {
-    setSubmittedArtists: (artists: ArtistList) => void;
+    setSubmittedArtists: (artists: Artist[]) => void;
 };
 
 const ArtistPicker: React.FC<Props> = ({ setSubmittedArtists }) => {
@@ -23,6 +23,8 @@ const ArtistPicker: React.FC<Props> = ({ setSubmittedArtists }) => {
     const { setCurrentScreen } = useContext(ScreenContext);
 
     const { accessToken } = useContext(UserContext);
+
+    const isFull = selectedArtists.indexOf(null) === -1;
 
     useEffect(() => {
         searchArtists(artistValue, accessToken!!).then((newArtists) => {
@@ -48,7 +50,7 @@ const ArtistPicker: React.FC<Props> = ({ setSubmittedArtists }) => {
     };
 
     const submitSelectedArtists = () => {
-        setSubmittedArtists(selectedArtists);
+        setSubmittedArtists(selectedArtists as Artist[]);
         setCurrentScreen!("song-voter");
     };
 
@@ -98,9 +100,9 @@ const ArtistPicker: React.FC<Props> = ({ setSubmittedArtists }) => {
                 transition={{ delay: 0.5 }}
                 className={classNames(
                     "flex justify-center w-full sm:w-96 mx-auto my-9 bg-blue-800 p-2 px-4 border-0 outline-none text-lg text-white text-center focus:outline-none",
-                    selectedArtists.length === 3 ? "bg-opacity-100 cursor-pointer" : "bg-opacity-25 cursor-default"
+                    isFull ? "bg-opacity-100 cursor-pointer" : "bg-opacity-25 cursor-default"
                 )}
-                disabled={selectedArtists.length === 3 ? false : true}
+                disabled={!isFull}
                 onClick={submitSelectedArtists}
             >
                 Continue
