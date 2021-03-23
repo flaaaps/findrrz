@@ -15,6 +15,10 @@ export function getAccessToken(): string | null {
     return accessToken
 }
 
+export function logout() {
+    localStorage.removeItem("user_access_token")
+}
+
 export function authorizationHeaders() {
     return { Authorization: "Bearer " + getAccessToken() }
 }
