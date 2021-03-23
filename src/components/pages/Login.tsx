@@ -1,5 +1,6 @@
 import React, { useContext, useEffect } from "react"
 import { UserContext } from "../App"
+import Nav from "../Nav"
 
 const CLIENT_ID = "ecf2247db8174da0aba4e3e62fdd2f6b"
 const REDIRECT_URI = "http://192.168.1.7:3000"
@@ -11,15 +12,22 @@ const Login: React.FC = () => {
         const urlParams = new URLSearchParams(window.location.hash.substr(1, window.location.hash.length - 1))
         const accessToken = urlParams.get("access_token")
         console.log(accessToken, "AT")
+        const hash = window.location.hash
         if (accessToken) {
-            localStorage.setItem("user_access_token", accessToken)
-            setAccessToken!(accessToken)
-            console.log(accessToken, "AT!")
-            // clear url
-            window.history.pushState({}, document.title, "./")
+            const parsed = hash.substr(1, hash.length - 1)
+            const params = new URLSearchParams(parsed)
+            const expiresIn = params.get("expires_in")
+            if (accessToken && expiresIn) {
+                localStorage.setItem("user_access_token", accessToken)
+                const currentSeconds = Date.now() / 1000
+                const expiresAt = currentSeconds + parseInt(expiresIn)
+                setAccessToken!(accessToken)
+                localStorage.setItem("expires_at", String(expiresAt))
+                // clear url
+                window.history.pushState({}, document.title, "./")
+            }
         }
-        // eslint-disable-next-line
-    }, [setUser])
+    }, [setUser, setAccessToken])
 
     const authorizeWithSpotify = (showDialog: boolean = false) => {
         var scopes = "user-read-private user-read-email user-top-read"
@@ -29,6 +37,7 @@ const Login: React.FC = () => {
     }
     return (
         <>
+            <Nav />
             <div className="px-6">
                 <button onClick={() => authorizeWithSpotify()}>Login</button>
             </div>
