@@ -1,6 +1,6 @@
 import { AnimatePresence, motion } from "framer-motion"
 import React from "react"
-import { ArtistList } from "../ArtistPicker"
+import { ArtistList } from "../screens/ArtistPicker"
 import ArtistIcon from "./Icon"
 
 interface Props {

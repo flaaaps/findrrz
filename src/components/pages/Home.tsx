@@ -1,7 +1,8 @@
 import { AnimatePresence, motion, Variants } from "framer-motion"
 import React, { useState } from "react"
 import { Artist } from "../../types/spotify"
-import ArtistPicker from "../ArtistPicker"
+import ArtistPicker from "../screens/ArtistPicker"
+import SongVoter from "../screens/SongVoter"
 
 type Screen = "artist-picker" | "song-voter"
 
@@ -37,7 +38,10 @@ const Home: React.FC = () => {
                             transition={{ duration: transition }}
                             key={1}
                         >
-                            <ArtistPicker setSubmittedArtists={setSubmittedArtists} />
+                            <ArtistPicker
+                                submittedArtists={submittedArtists}
+                                setSubmittedArtists={setSubmittedArtists}
+                            />
                         </motion.div>
                     ) : (
                         <motion.div
@@ -48,11 +52,7 @@ const Home: React.FC = () => {
                             transition={{ duration: transition }}
                             key={2}
                         >
-                            <div className="m-52">
-                                {submittedArtists?.map((artist) => (
-                                    <h1 key={artist?.id}>{artist?.name}</h1>
-                                ))}
-                            </div>
+                            <SongVoter artists={submittedArtists!!} />
                         </motion.div>
                     )}
                 </AnimatePresence>
