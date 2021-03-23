@@ -16,6 +16,10 @@ body {
     background-color: rgba(228, 228, 231, var(--tw-bg-opacity));
 }
 
+img {
+    -webkit-user-drag: none;
+}
+
 .logo,
 .loading-text {
     font-family: "Chango", cursive;
