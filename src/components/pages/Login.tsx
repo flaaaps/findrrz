@@ -1,39 +1,39 @@
-import React, { useContext, useEffect } from "react";
-import { UserContext } from "../App";
+import React, { useContext, useEffect } from "react"
+import { UserContext } from "../App"
 
-const CLIENT_ID = "ecf2247db8174da0aba4e3e62fdd2f6b";
-const REDIRECT_URI = "http://192.168.1.7:3000";
+const CLIENT_ID = "ecf2247db8174da0aba4e3e62fdd2f6b"
+const REDIRECT_URI = "http://192.168.1.7:3000"
 
 const Login: React.FC = () => {
-    const { setUser, setAccessToken } = useContext(UserContext);
+    const { setUser, setAccessToken } = useContext(UserContext)
 
     useEffect(() => {
-        const urlParams = new URLSearchParams(window.location.hash.substr(1, window.location.hash.length - 1));
-        const accessToken = urlParams.get("access_token");
-        console.log(accessToken, "AT");
+        const urlParams = new URLSearchParams(window.location.hash.substr(1, window.location.hash.length - 1))
+        const accessToken = urlParams.get("access_token")
+        console.log(accessToken, "AT")
         if (accessToken) {
-            localStorage.setItem("user_access_token", accessToken);
-            setAccessToken!(accessToken);
-            console.log(accessToken, "AT!");
+            localStorage.setItem("user_access_token", accessToken)
+            setAccessToken!(accessToken)
+            console.log(accessToken, "AT!")
             // clear url
-            window.history.pushState({}, document.title, "./");
+            window.history.pushState({}, document.title, "./")
         }
         // eslint-disable-next-line
-    }, [setUser]);
+    }, [setUser])
 
     const authorizeWithSpotify = (showDialog: boolean = false) => {
-        var scopes = "user-read-private user-read-email user-top-read";
+        var scopes = "user-read-private user-read-email user-top-read"
         window.location.href = `https://accounts.spotify.com/authorize?response_type=token&client_id=${CLIENT_ID}&scope=${encodeURIComponent(
             scopes
-        )}&redirect_uri=${REDIRECT_URI}&show_dialog=${showDialog}`;
-    };
+        )}&redirect_uri=${REDIRECT_URI}&show_dialog=${showDialog}`
+    }
     return (
         <>
             <div className="px-6">
                 <button onClick={() => authorizeWithSpotify()}>Login</button>
             </div>
         </>
-    );
-};
+    )
+}
 
-export default Login;
+export default Login

@@ -1,10 +1,10 @@
-import { motion } from "framer-motion";
-import React from "react";
-import { SpotifyUser } from "../types/spotify";
+import { motion } from "framer-motion"
+import React from "react"
+import { SpotifyUser } from "../types/spotify"
 
 type Props = {
-    user?: SpotifyUser | null;
-};
+    user?: SpotifyUser | null
+}
 
 const Nav: React.FC<Props> = ({ user }) => {
     return (
@@ -22,7 +22,7 @@ const Nav: React.FC<Props> = ({ user }) => {
                 </>
             )}
         </motion.nav>
-    );
-};
+    )
+}
 
-export default Nav;
+export default Nav

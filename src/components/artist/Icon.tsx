@@ -1,10 +1,10 @@
-import React from "react";
-import { ArtistIconDimension } from "./Card";
+import React from "react"
+import { ArtistIconDimension } from "./Card"
 
 type Props = {
-    width?: number;
-    height?: number;
-};
+    width?: number
+    height?: number
+}
 
 export const ArtistIcon: React.FC<Props> = ({
     width = ArtistIconDimension.width,
@@ -50,7 +50,7 @@ export const ArtistIcon: React.FC<Props> = ({
                 </div>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default ArtistIcon;
+export default ArtistIcon

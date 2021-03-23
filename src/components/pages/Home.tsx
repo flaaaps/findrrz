@@ -49,7 +49,7 @@ const Home: React.FC = () => {
                             key={2}
                         >
                             <div className="m-52">
-                                {submittedArtists?.map(artist => (
+                                {submittedArtists?.map((artist) => (
                                     <h1 key={artist?.id}>{artist?.name}</h1>
                                 ))}
                             </div>

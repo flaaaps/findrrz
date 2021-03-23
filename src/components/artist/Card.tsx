@@ -1,23 +1,23 @@
-import classNames from "classnames";
-import { AnimatePresence, motion } from "framer-motion";
-import React from "react";
-import { Artist } from "../../types/spotify";
+import classNames from "classnames"
+import { AnimatePresence, motion } from "framer-motion"
+import React from "react"
+import { Artist } from "../../types/spotify"
 
-import ArtistIcon from "./Icon";
+import ArtistIcon from "./Icon"
 
 type Props = {
-    artist: Artist;
-    visible: boolean;
-    setSelectedArtist: (artist: Artist) => void;
-    removeSelectedArtist: (artistId: string) => void;
-    index: number;
-    selected: boolean;
-};
+    artist: Artist
+    visible: boolean
+    setSelectedArtist: (artist: Artist) => void
+    removeSelectedArtist: (artistId: string) => void
+    index: number
+    selected: boolean
+}
 
 export const ArtistIconDimension = {
     width: 50,
     height: 50,
-};
+}
 
 const ArtistCard: React.FC<Props> = ({ artist, visible, setSelectedArtist, removeSelectedArtist, index, selected }) => {
     return (
@@ -60,7 +60,7 @@ const ArtistCard: React.FC<Props> = ({ artist, visible, setSelectedArtist, remov
                 )}
             </AnimatePresence>
         </>
-    );
-};
+    )
+}
 
-export default ArtistCard;
+export default ArtistCard

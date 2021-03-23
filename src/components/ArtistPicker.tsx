@@ -1,85 +1,85 @@
-import classNames from "classnames";
-import { motion } from "framer-motion";
-import React, { ChangeEvent, useContext, useEffect, useState } from "react";
-import { getTopArtists, searchArtists } from "../api/spotify";
-import { Artist } from "../types/spotify";
-import { UserContext } from "./App";
-import ArtistCard from "./artist/Card";
-import ArtistSearch from "./artist/Search";
-import ArtistSelection from "./artist/Selection";
-import { ScreenContext } from "./pages/Home";
+import classNames from "classnames"
+import { motion } from "framer-motion"
+import React, { ChangeEvent, useContext, useEffect, useState } from "react"
+import { getTopArtists, searchArtists } from "../api/spotify"
+import { Artist } from "../types/spotify"
+import { UserContext } from "./App"
+import ArtistCard from "./artist/Card"
+import ArtistSearch from "./artist/Search"
+import ArtistSelection from "./artist/Selection"
+import { ScreenContext } from "./pages/Home"
 
-export type ArtistList = [Artist | null, Artist | null, Artist | null];
+export type ArtistList = [Artist | null, Artist | null, Artist | null]
 
 type Props = {
-    setSubmittedArtists: (artists: Artist[]) => void;
-};
+    setSubmittedArtists: (artists: Artist[]) => void
+}
 
 const ArtistPicker: React.FC<Props> = ({ setSubmittedArtists }) => {
-    const [artistValue, setArtistValue] = useState("");
-    const [artists, setArtists] = useState<Artist[]>([]);
-    const [selectedArtists, setSelectedArtists] = useState<ArtistList>([null, null, null]);
+    const [artistValue, setArtistValue] = useState("")
+    const [artists, setArtists] = useState<Artist[]>([])
+    const [selectedArtists, setSelectedArtists] = useState<ArtistList>([null, null, null])
 
-    const { setCurrentScreen } = useContext(ScreenContext);
+    const { setCurrentScreen } = useContext(ScreenContext)
 
-    const { accessToken } = useContext(UserContext);
+    const { accessToken } = useContext(UserContext)
 
-    const isFull = selectedArtists.indexOf(null) === -1;
+    const isFull = selectedArtists.indexOf(null) === -1
 
     useEffect(() => {
-        searchArtists(artistValue, accessToken!!).then((newArtists) => {
-            const artistsToPush: Artist[] = [];
+        searchArtists(artistValue, accessToken!!).then(newArtists => {
+            const artistsToPush: Artist[] = []
             if (newArtists.length > 0) {
-                newArtists.forEach((art) => {
-                    if (art.popularity > 20 && artistsToPush.length < 20) artistsToPush.push(art);
-                });
-                setArtists(artistsToPush);
+                newArtists.forEach(art => {
+                    if (art.popularity > 20 && artistsToPush.length < 20) artistsToPush.push(art)
+                })
+                setArtists(artistsToPush)
             }
-        });
-    }, [artistValue, accessToken]);
+        })
+    }, [artistValue, accessToken])
 
     useEffect(() => {
-        setTopArtists();
+        setTopArtists()
         // eslint-disable-next-line
-    }, [accessToken]);
+    }, [accessToken])
 
     const setTopArtists = () => {
-        getTopArtists(accessToken!!).then((topArtists) => {
-            setArtists(topArtists);
-        });
-    };
+        getTopArtists(accessToken!!).then(topArtists => {
+            setArtists(topArtists)
+        })
+    }
 
     const submitSelectedArtists = () => {
-        setSubmittedArtists(selectedArtists as Artist[]);
-        setCurrentScreen!("song-voter");
-    };
+        setSubmittedArtists(selectedArtists as Artist[])
+        setCurrentScreen!("song-voter")
+    }
 
     const setSelectedArtist = (artist: Artist) => {
-        console.log("Set top artist:", artist);
-        setSelectedArtists((prevSelected) => {
-            const newSelected: ArtistList = [prevSelected[0], prevSelected[1], prevSelected[2]];
-            newSelected[prevSelected.indexOf(null)] = artist;
-            return newSelected;
-        });
-    };
+        console.log("Set top artist:", artist)
+        setSelectedArtists(prevSelected => {
+            const newSelected: ArtistList = [prevSelected[0], prevSelected[1], prevSelected[2]]
+            newSelected[prevSelected.indexOf(null)] = artist
+            return newSelected
+        })
+    }
 
     const removeSelectedArtist = (artistId: string) => {
-        setSelectedArtists((prevSelected) => {
-            const newSelected: ArtistList = [...prevSelected];
-            const found = prevSelected.find((prev) => prev?.id === artistId);
-            console.log(found);
-            if (found) newSelected[prevSelected.indexOf(found)] = null;
-            console.log(newSelected);
-            return newSelected;
-        });
-    };
+        setSelectedArtists(prevSelected => {
+            const newSelected: ArtistList = [...prevSelected]
+            const found = prevSelected.find(prev => prev?.id === artistId)
+            console.log(found)
+            if (found) newSelected[prevSelected.indexOf(found)] = null
+            console.log(newSelected)
+            return newSelected
+        })
+    }
 
     const handleSearch = (e: ChangeEvent<HTMLInputElement>) => {
         if (e.target.value === "") {
-            setTopArtists();
+            setTopArtists()
         }
-        setArtistValue(e.target.value);
-    };
+        setArtistValue(e.target.value)
+    }
     return (
         <div>
             <motion.h1
@@ -116,7 +116,7 @@ const ArtistPicker: React.FC<Props> = ({ setSubmittedArtists }) => {
                 >
                     {artists.map((artist, index) => (
                         <ArtistCard
-                            selected={!!selectedArtists.find((art) => art?.id === artist.id)}
+                            selected={!!selectedArtists.find(art => art?.id === artist.id)}
                             artist={artist}
                             index={index}
                             setSelectedArtist={setSelectedArtist}
@@ -128,7 +128,7 @@ const ArtistPicker: React.FC<Props> = ({ setSubmittedArtists }) => {
                 </motion.div>
             </div>
         </div>
-    );
-};
+    )
+}
 
-export default ArtistPicker;
+export default ArtistPicker

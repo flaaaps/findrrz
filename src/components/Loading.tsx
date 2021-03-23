@@ -1,9 +1,9 @@
-import React from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React from "react"
+import { motion, AnimatePresence } from "framer-motion"
 
 type Props = {
-    loading: boolean;
-};
+    loading: boolean
+}
 
 const Loading: React.FC<Props> = ({ loading }) => (
     <div className="loader">
@@ -42,6 +42,6 @@ const Loading: React.FC<Props> = ({ loading }) => (
             )}
         </AnimatePresence>
     </div>
-);
+)
 
-export default Loading;
+export default Loading
