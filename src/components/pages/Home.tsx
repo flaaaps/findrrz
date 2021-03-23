@@ -1,18 +1,19 @@
-import { AnimatePresence, motion, Variants } from "framer-motion";
-import React, { useState } from "react";
-import ArtistPicker, { ArtistList } from "../ArtistPicker";
+import { AnimatePresence, motion, Variants } from "framer-motion"
+import React, { useState } from "react"
+import { Artist } from "../../types/spotify"
+import ArtistPicker from "../ArtistPicker"
 
-type Screen = "artist-picker" | "song-voter";
+type Screen = "artist-picker" | "song-voter"
 
 type ContextProps = {
-    currentScreen: Screen;
-    setCurrentScreen: (screen: Screen) => void;
-};
-export const ScreenContext = React.createContext<Partial<ContextProps>>({});
+    currentScreen: Screen
+    setCurrentScreen: (screen: Screen) => void
+}
+export const ScreenContext = React.createContext<Partial<ContextProps>>({})
 const Home: React.FC = () => {
-    const [currentScreen, setCurrentScreen] = useState<Screen>("artist-picker");
-    const [submittedArtists, setSubmittedArtists] = useState<ArtistList>();
-    const transition = 0.25;
+    const [currentScreen, setCurrentScreen] = useState<Screen>("artist-picker")
+    const [submittedArtists, setSubmittedArtists] = useState<Artist[]>()
+    const transition = 0.25
 
     const variants: Variants = {
         show: {
@@ -22,15 +23,9 @@ const Home: React.FC = () => {
         hidden: {
             opacity: 0,
         },
-    };
+    }
     return (
         <ScreenContext.Provider value={{ currentScreen, setCurrentScreen }}>
-            <button
-                className="fixed"
-                onClick={() => setCurrentScreen((cs) => (cs === "artist-picker" ? "song-voter" : "artist-picker"))}
-            >
-                Change current screen
-            </button>
             <div className="px-6" id="content">
                 <AnimatePresence>
                     {currentScreen === "artist-picker" ? (
@@ -53,17 +48,17 @@ const Home: React.FC = () => {
                             transition={{ duration: transition }}
                             key={2}
                         >
-                            <p className="m-52">
-                                {submittedArtists!.map((artist) => (
-                                    <h1>{artist?.name}</h1>
+                            <div className="m-52">
+                                {submittedArtists?.map(artist => (
+                                    <h1 key={artist?.id}>{artist?.name}</h1>
                                 ))}
-                            </p>
+                            </div>
                         </motion.div>
                     )}
                 </AnimatePresence>
             </div>
         </ScreenContext.Provider>
-    );
-};
+    )
+}
 
-export default Home;
+export default Home
