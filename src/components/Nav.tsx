@@ -1,6 +1,7 @@
 import { motion } from "framer-motion"
 import React from "react"
 import { SpotifyUser } from "../types/spotify"
+import AccountDropdown from "./AccountDropdown"
 
 type Props = {
     user?: SpotifyUser | null
@@ -18,7 +19,7 @@ const Nav: React.FC<Props> = ({ user }) => {
             <h1 className="text-gray-200 text-3xl logo">MusicFinder</h1>
             {user && (
                 <>
-                    <img className="rounded-full" width="40" src={user.images[0].url} alt={user.id} />
+                    <AccountDropdown userImageURL={user.images[0].url} />
                 </>
             )}
         </motion.nav>
