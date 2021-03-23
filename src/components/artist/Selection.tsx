@@ -1,11 +1,11 @@
-import { AnimatePresence, motion } from "framer-motion";
-import React from "react";
-import { ArtistList } from "../ArtistPicker";
-import ArtistIcon from "./Icon";
+import { AnimatePresence, motion } from "framer-motion"
+import React from "react"
+import { ArtistList } from "../ArtistPicker"
+import ArtistIcon from "./Icon"
 
 interface Props {
-    selectedArtists: ArtistList;
-    removeSelectedArtist: (artistId: string) => void;
+    selectedArtists: ArtistList
+    removeSelectedArtist: (artistId: string) => void
 }
 
 const ArtistSelection: React.FC<Props> = ({ selectedArtists, removeSelectedArtist }) => {
@@ -23,13 +23,13 @@ const ArtistSelection: React.FC<Props> = ({ selectedArtists, removeSelectedArtis
                         {artist && (
                             <motion.img
                                 onClick={() => removeSelectedArtist(artist.id)}
-                                animate={{ y: 0, opacity: 1 }}
-                                initial={{ y: 50, opacity: 0 }}
-                                transition={{ duration: 0.25 }}
+                                animate={{ scale: 1, opacity: 1 }}
+                                initial={{ scale: 0.8, opacity: 0 }}
+                                transition={{ duration: 0.1 }}
                                 src={artist.images[0].url}
                                 key={artist.id}
-                                className="absolute w-16 h-16 md:w-32 md:h-32"
-                                exit={{ y: -50, opacity: 0 }}
+                                className="absolute w-16 h-16 md:w-32 md:h-32 cursor-pointer"
+                                exit={{ scale: 0.8, opacity: 0 }}
                             />
                         )}
                         <ArtistIcon />
@@ -37,7 +37,7 @@ const ArtistSelection: React.FC<Props> = ({ selectedArtists, removeSelectedArtis
                 </div>
             ))}
         </motion.div>
-    );
-};
+    )
+}
 
-export default ArtistSelection;
+export default ArtistSelection
