@@ -50,17 +50,19 @@ const App: React.FC = () => {
                     setAccessToken,
                 }}
             >
-                <div className={classNames("main", loading ? "bg-gray-800" : "bg-gray-200")}>
+                <div className={classNames("main", "bg-gray-200")}>
                     {user ? (
                         <>
                             <Nav user={user} />
                             <Home />
                         </>
+                    ) : loading ? (
+                        <p className="hidden">Loading...</p>
                     ) : (
-                        <>
+                        <p>
                             <Nav />
                             <Login />
-                        </>
+                        </p>
                     )}
                 </div>
             </UserContext.Provider>
