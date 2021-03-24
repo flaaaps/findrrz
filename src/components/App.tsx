@@ -47,8 +47,8 @@ const App: React.FC = () => {
                 }}
             >
                 <div className={classNames("main", "bg-gray-200")}>
+                    <Nav user={user} />
                     <WithAuthorization>
-                        <Nav user={user} />
                         <Home />
                     </WithAuthorization>
                 </div>

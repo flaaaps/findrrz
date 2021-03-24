@@ -1,6 +1,5 @@
 import React, { useContext, useEffect } from "react"
 import { UserContext } from "../App"
-import Nav from "../Nav"
 
 const CLIENT_ID = "ecf2247db8174da0aba4e3e62fdd2f6b"
 const REDIRECT_URI = "http://192.168.1.7:3000"
@@ -11,7 +10,6 @@ const Login: React.FC = () => {
     useEffect(() => {
         const urlParams = new URLSearchParams(window.location.hash.substr(1, window.location.hash.length - 1))
         const accessToken = urlParams.get("access_token")
-        console.log(accessToken, "AT")
         const hash = window.location.hash
         if (accessToken) {
             const parsed = hash.substr(1, hash.length - 1)
@@ -37,7 +35,6 @@ const Login: React.FC = () => {
     }
     return (
         <>
-            <Nav />
             <div className="px-6">
                 <button onClick={() => authorizeWithSpotify()}>Login</button>
             </div>
