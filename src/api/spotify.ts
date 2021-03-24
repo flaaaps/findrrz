@@ -38,8 +38,8 @@ export async function searchArtists(q: string): Promise<Artist[]> {
     return data.artists.items
 }
 
-export async function getTopArtists(): Promise<Artist[]> {
-    return fetch("https://api.spotify.com/v1/me/top/artists", {
+export async function getTopArtists(timeRange?: "short_term" | "medium_term" | "long_term"): Promise<Artist[]> {
+    return fetch(`https://api.spotify.com/v1/me/top/artists?time_range=${timeRange || "short_term"}`, {
         headers: { Authorization: `Bearer ${getAccessToken()}` },
     })
         .then(async res => {
