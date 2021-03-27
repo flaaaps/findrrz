@@ -19,12 +19,12 @@ const AccountDropdown: React.FC<Props> = ({ userImageURL }) => {
 
     return (
         <div className="sticky z-20 flex justify-end">
-            <div className="relative w-20 block text-left">
+            <div className="relative w-12 block text-left">
                 <div>
                     <button
                         onClick={() => setExpanded(prev => !prev)}
                         type="button"
-                        className="inline-flex justify-center w-full rounded-md px-4 py-2 text-sm font-medium text-gray-700 focus:outline-none"
+                        className="inline-flex justify-center w-full rounded-md px-0 py-2 text-sm font-medium text-gray-700 focus:outline-none"
                         id="options-menu"
                         aria-expanded="true"
                         aria-haspopup="true"
