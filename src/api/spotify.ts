@@ -1,5 +1,5 @@
-import { Artist, SpotifyUser } from "../types/spotify"
-import { getAccessToken } from "./authorization"
+import { Artist, SpotifyUser, Track } from "../types/spotify"
+import { authorizationHeaders, getAccessToken } from "./authorization"
 
 export function getMe() {
     return new Promise<SpotifyUser | null>(async (resolve, reject) => {
@@ -47,8 +47,28 @@ export async function getTopArtists(timeRange?: "short_term" | "medium_term" | "
             const data = await res.json()
             return data.items
         })
-        .catch(() => null)
+        .catch(() => [])
     // if (!res.ok) return [];
     // const data = await res.json();
     // return data.items;
+}
+
+// interface RelatedArtist extends Artist {
+//     to: Artist
+// }
+export async function getRelatedArtistsTopTracks(artistId: string, artistOffset: number = 0): Promise<Track[]> {
+    const relatedArtistRes = await fetch(`https://api.spotify.com/v1/artists/${artistId}/related-artists`, {
+        headers: {
+            Authorization: `Bearer ${getAccessToken()}`,
+        },
+    })
+    const { artists: relatedArtists } = await relatedArtistRes.json()
+    const relatedArtist: Artist = relatedArtists[artistOffset]
+
+    return fetch(`https://api.spotify.com/v1/artists/${relatedArtist.id}/top-tracks?country=US`, {
+        headers: authorizationHeaders(),
+    }).then(async res => {
+        const { tracks }: { tracks: Track[] } = await res.json()
+        return tracks
+    })
 }
