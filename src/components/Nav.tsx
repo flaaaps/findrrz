@@ -14,7 +14,7 @@ const Nav: React.FC<Props> = ({ user }) => {
             animate={{ y: 0 }}
             transition={{ duration: 0.25 }}
             style={{ height: "60px" }}
-            className="py-8 px-6 mb-4 bg-gray-800 flex justify-between items-center shadow-2xl z-50"
+            className="py-8 px-6 mb-4 bg-primary flex justify-between items-center shadow-xl z-50"
         >
             <h1 className="text-gray-200 text-3xl logo">MusicFinder</h1>
             {user && (

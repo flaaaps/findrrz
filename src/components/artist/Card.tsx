@@ -35,10 +35,10 @@ const ArtistCard: React.FC<Props> = ({ artist, visible, setSelectedArtist, remov
                         onClick={() => (!selected ? setSelectedArtist(artist) : removeSelectedArtist(artist.id))}
                     >
                         <motion.div
-                            className={classNames("cursor-pointer bg-gray-200 flex items-center my-3")}
+                            className={classNames("cursor-pointer flex items-center my-3 mx-3")}
                             animate={
                                 selected
-                                    ? { boxShadow: "-30px 10px 15px 0px rgba(0, 0, 0, 0.096)" }
+                                    ? { boxShadow: "5px 10px 5px 0px rgba(0, 0, 0, 0.096)" }
                                     : { boxShadow: "0px 0px 0px 0px rgba(0, 0, 0, 0)" }
                             }
                             initial={{ boxShadow: "0px 0px 0px 0px rgba(0, 0, 0, 0)" }}
@@ -53,7 +53,7 @@ const ArtistCard: React.FC<Props> = ({ artist, visible, setSelectedArtist, remov
                                 </div>
                             )}
                             <div className="ml-3">
-                                <h1 className="text-xl select-none">{artist.name}</h1>
+                                <h1 className="text-xl text-background-400 select-none">{artist.name}</h1>
                             </div>
                         </motion.div>
                     </motion.div>
