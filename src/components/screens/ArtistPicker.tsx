@@ -84,7 +84,7 @@ const ArtistPicker: React.FC<Props> = ({ submittedArtists, setSubmittedArtists }
                 initial={{ y: -100, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.5 }}
-                className="text-4xl mt-16 text-center font-extrabold font-open-sans text-gray-800"
+                className="text-4xl mt-16 text-center font-extrabold font-open-sans text-background-600"
             >
                 Select Your Top 3 Artists
             </motion.h1>
@@ -97,7 +97,7 @@ const ArtistPicker: React.FC<Props> = ({ submittedArtists, setSubmittedArtists }
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: 0.5 }}
                 className={classNames(
-                    "flex justify-center w-full sm:w-96 mx-auto my-9 bg-blue-800 p-2 px-4 border-0 outline-none text-lg text-white text-center focus:outline-none",
+                    "flex justify-center w-full sm:w-96 mx-auto my-9 bg-primary p-2 px-4 border-0 outline-none text-lg text-white text-center focus:outline-none",
                     isFull ? "bg-opacity-100 cursor-pointer" : "bg-opacity-25 cursor-default"
                 )}
                 disabled={!isFull}
