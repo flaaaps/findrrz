@@ -4,10 +4,17 @@ module.exports = {
     purge: ["./src/**/*.{js,jsx,ts,tsx}", "./public/index.html"],
     darkMode: "class",
     theme: {
+        colors: {
+            ...colors,
+        },
         extend: {
             colors: {
                 gray: colors.gray,
-                primary: "#2360D6",
+                primary: {
+                    DEFAULT: "#2360D6",
+                    500: "#2360D6",
+                    700: "#234AD6",
+                },
                 secondary: "#E38826",
                 foreground: "#F2F2F2",
                 background: {
