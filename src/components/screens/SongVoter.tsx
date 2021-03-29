@@ -1,199 +1,107 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import React, { useContext, useEffect, useState } from "react"
+import { useMotionValue } from "framer-motion"
+import React, { useEffect, useState } from "react"
 import { getRelatedArtistsTopTracks } from "../../api/spotify"
 import { Artist, Track } from "../../types/spotify"
-import { getRandomInt } from "../../utils/random"
-import { ScreenContext } from "../pages/Home"
+import TrackAudioControls from "../track/AudioControls"
+import TrackAudioPreview from "../track/AudioPreview"
+import TrackBackground from "../track/Background"
+import TrackDetails from "../track/Details"
+import TrackDragOverlay from "../track/DragOverlay"
 
 type Props = {
     artists: Artist[]
 }
 
-interface RatedTrack {
-    track: Track
+interface RatedTrack extends Track {
     liked: boolean
 }
 
 const SongVoter: React.FC<Props> = ({ artists }) => {
-    const [artistOffset, setArtistOffset] = useState(getRandomInt(5, 15))
-    const [topTracks, setTopTracks] = useState<Track[]>([])
-    const [ratedTracks, setRatedTracks] = useState<RatedTrack[]>([])
-    const [likedArtists, setLikedArtists] = useState<Artist[]>([])
-    const [likedArtistOffset, setLikedArtistOffset] = useState(0)
+    const [index, setIndex] = useState(0)
+    const [tracks, setTracks] = useState<Track[]>([])
+    const [ratedSongs, setRatedSongs] = useState<RatedTrack[]>([])
+    const [targetVolume, setTargetVolume] = useState(readFromLocalStorage() ?? 0.15)
 
-    const [shownTracks, setShownTracks] = useState<string[]>([])
-
-    const { setCurrentScreen } = useContext(ScreenContext)
+    const x = useMotionValue(0)
+    let currentSong = tracks[index]
 
     useEffect(() => {
-        console.log("Artists:", artists)
-        const ftch = async () => {
+        const fetchArtistsTopTrack = async () => {
+            const fullTracks: Track[] = []
             for (let artist of artists) {
-                let fetchedTopTrack = await retrieveTopTrack(artist)
-                console.log(
-                    `Fetched ${fetchedTopTrack?.name} by ${fetchedTopTrack?.artists[0].name}. It ${
-                        shownTracks.includes(fetchedTopTrack!.id) ? "has" : "has not"
-                    } been shown yet.`
-                )
-                let customOffset = 0
-                while (shownTracks.includes(fetchedTopTrack!.id)) {
-                    console.log("Trying new one...")
-                    fetchedTopTrack = await retrieveTopTrack(artist, customOffset)
-                    console.log("New one:", fetchedTopTrack)
-                    customOffset++
+                for (let i = 0; i <= 19; i++) {
+                    const fetchedTracks = await getRelatedArtistsTopTracks(artist.id, i)
+                    fullTracks.push(fetchedTracks[0])
                 }
-                setTopTracks(prev => {
-                    const newTopTracks = [...prev]
-                    if (fetchedTopTrack && !shownTracks.includes(fetchedTopTrack.id)) {
-                        newTopTracks.push(fetchedTopTrack!!)
-                        setShownTracks(prev => {
-                            const prevState = [...prev]
-                            prevState.push(fetchedTopTrack!.id)
-                            return prevState
-                        })
-                    }
-                    return newTopTracks
-                })
             }
+            setTracks(fullTracks)
         }
-        console.log(topTracks)
-        if (topTracks.length <= 1) ftch()
-    }, [artists, artistOffset])
+        fetchArtistsTopTrack()
+    }, [artists])
 
     useEffect(() => {
-        console.log("Rated tracks update")
-        console.log(ratedTracks)
-        const liked = ratedTracks.filter(track => track.liked)
-        console.log(`${liked.length} liked songs.`)
-        liked.forEach(track => {
-            setLikedArtists(prev => {
-                const newState = [...prev]
-                if (!likedArtists.includes(track.track.artists[0])) newState.push(track.track.artists[0])
-                return newState
-            })
+        console.log("Tracks updated:", tracks)
+        console.log(`We got ${tracks.length} songs`)
+        tracks.forEach(track => {
+            console.log(`${track.name} by ${track.artists[0].name}`)
         })
-    }, [ratedTracks])
+    }, [tracks])
 
     useEffect(() => {
-        console.log("Changed liked artist offset.")
-        console.log("Liked artist offset:", likedArtistOffset)
-        const customArtists = likedArtists.slice(likedArtistOffset - 3, likedArtistOffset)
-        console.log("Custom artists:", customArtists)
-        const ftch = async () => {
-            for (let artist of customArtists) {
-                let fetchedTopTrack = await retrieveTopTrack(artist)
-                console.log(`Fetched ${fetchedTopTrack?.name} by ${fetchedTopTrack?.artists[0].name}`)
-                let customOffset = 0
-                while (shownTracks.includes(fetchedTopTrack!.id)) {
-                    console.log("Trying new one...")
-                    fetchedTopTrack = await retrieveTopTrack(artist, customOffset)
-                    console.log("New one:", fetchedTopTrack)
-                    customOffset++
-                }
-                setTopTracks(prev => {
-                    const newTopTracks = [...prev]
-                    if (fetchedTopTrack && !shownTracks.includes(fetchedTopTrack.id)) {
-                        newTopTracks.push(fetchedTopTrack!!)
-                        setShownTracks(prev => {
-                            const prevState = [...prev]
-                            prevState.push(fetchedTopTrack!.id)
-                            return prevState
-                        })
-                    }
-                    return newTopTracks
-                })
-            }
+        if (ratedSongs.length > 0) {
+            console.log("Rated songs have changed:", ratedSongs)
         }
-        console.log(topTracks.length <= 1)
-        if (topTracks.length <= 1) ftch()
-    }, [likedArtistOffset])
+    }, [ratedSongs])
 
-    useEffect(() => {
-        console.log("Liked artists:", likedArtists)
-    }, [likedArtists])
-
-    const retrieveTopTrack = (artist: Artist, customArtistOffset?: number) => {
-        return new Promise<Track | null>((resolve, reject) => {
-            getRelatedArtistsTopTracks(artist?.id, customArtistOffset ? customArtistOffset : artistOffset)
-                .then(fetched => {
-                    resolve(fetched[0])
-                })
-                .catch(err => {
-                    reject(err)
-                })
-        })
+    const setVolume = (value: number) => {
+        writeToLocalStorage(value)
+        setTargetVolume(value)
     }
 
-    const rateTrack = async (liked: boolean, track: Track) => {
-        const foundTrack = topTracks.find(topTrack => topTrack === track)
-        if (foundTrack) topTracks.splice(topTracks.indexOf(foundTrack), 1)
-        if (topTracks.length === 1) {
-            console.log("Changing artist offset to:", artistOffset + 1)
-            if (artistOffset >= 18) {
-                // setDone(true)
-                console.log("Liked artists:", likedArtists)
-                setLikedArtistOffset(prev => prev + 3)
-            } else setArtistOffset(prev => prev + 1)
-        }
-        setRatedTracks(prev => {
-            const newVotedTracks = [...prev]
-            newVotedTracks.push({ liked, track })
-            return newVotedTracks
-        })
-        if (liked) {
-            let fetchedTopTrack = await retrieveTopTrack(track.artists[0])
-            console.log(
-                `Fetched ${fetchedTopTrack?.name} by ${fetchedTopTrack?.artists[0].name}. It ${
-                    shownTracks.includes(fetchedTopTrack!.id) ? "has" : "has not"
-                } been shown yet.`
-            )
-            let customOffset = 0
-            while (shownTracks.includes(fetchedTopTrack!.id)) {
-                if (customOffset === 5) {
-                    console.log("You won. No songs left.")
-                    return
-                }
-                console.log("Trying new one...")
-                fetchedTopTrack = await retrieveTopTrack(track.artists[0], customOffset)
-                console.log("New one:", fetchedTopTrack)
-                customOffset++
-            }
-
-            setTopTracks(prev => {
-                const newState = [...prev]
-                if (fetchedTopTrack && !shownTracks.includes(fetchedTopTrack.id)) {
-                    newState.push(fetchedTopTrack)
-                    setShownTracks(prev => {
-                        const prevState = [...prev]
-                        prevState.push(fetchedTopTrack!.id)
-                        return prevState
-                    })
-                }
-                return newState
-            })
-        }
+    function next() {
+        setIndex(index + 1)
     }
+
+    function take() {
+        setRatedSongs(prev => {
+            const newState = [...prev]
+            newState.push({ ...currentSong, liked: true })
+            return newState
+        })
+        next()
+    }
+
+    function handleDragEnd() {
+        if (x.get() > 30) take()
+        else if (x.get() < -30) next()
+    }
+    if (!tracks || tracks.length === 0) {
+        return <div>Loading...</div>
+    }
+
+    if (!currentSong) return <></>
 
     return (
-        <div>
-            <button onClick={() => setCurrentScreen!("artist-picker")}>Back</button>
-            <ul>
-                {topTracks.length > 0 &&
-                    topTracks.map(track => (
-                        <li key={track.id} className="my-10">
-                            <img src={track.album.images[0].url} width="50" alt={track.name} />
-                            {track.name} by {track.artists[0].name}
-                            <div className="block">
-                                <button onClick={() => rateTrack(true, track)} className="mr-5">
-                                    Like
-                                </button>
-                                <button onClick={() => rateTrack(false, track)}>Dislike</button>
-                            </div>
-                        </li>
-                    ))}
-            </ul>
-        </div>
+        <>
+            <TrackAudioPreview currentSong={currentSong} key={currentSong.id} targetVolume={targetVolume} />
+            <TrackDragOverlay x={x} onDragEnd={handleDragEnd} />
+            <TrackAudioControls volume={targetVolume} setVolume={setVolume} />
+            <TrackDetails x={x} currentSong={currentSong} left={tracks.length - index} />
+            <TrackBackground currentSong={currentSong} />
+        </>
     )
+}
+function writeToLocalStorage(volume: number) {
+    localStorage.setItem("volume", String(volume))
+}
+
+function readFromLocalStorage(): number | null {
+    const item = localStorage.getItem("volume")
+    if (item) {
+        const number = parseInt(item)
+        return isNaN(number) ? null : number
+    } else return null
 }
 
 export default SongVoter

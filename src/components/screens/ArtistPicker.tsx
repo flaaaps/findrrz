@@ -79,7 +79,7 @@ const ArtistPicker: React.FC<Props> = ({ submittedArtists, setSubmittedArtists }
         setArtistValue(e.target.value)
     }
     return (
-        <div>
+        <div className="mt-24">
             <motion.h1
                 initial={{ y: -100, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}

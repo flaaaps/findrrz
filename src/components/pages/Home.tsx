@@ -27,7 +27,7 @@ const Home: React.FC = () => {
     }
     return (
         <ScreenContext.Provider value={{ currentScreen, setCurrentScreen }}>
-            <div className="px-6" id="content">
+            <div className="flex flex-col min-h-screen h-full" id="content">
                 <AnimatePresence>
                     {currentScreen === "artist-picker" ? (
                         <motion.div
@@ -48,6 +48,7 @@ const Home: React.FC = () => {
                             variants={variants}
                             animate="show"
                             initial="hidden"
+                            className="w-full flex-grow flex overflow-hidden relative"
                             exit="hidden"
                             transition={{ duration: transition }}
                             key={2}
