@@ -35,7 +35,7 @@ const TrackDetails: React.FC<Props> = ({ currentSong, x, left }) => {
                 className="w-full flex flex-col justify-start items-center mb-20 px-10
                 max-h-32 overflow-hidden"
             >
-                <p className="text-white text-center tracking-tight mb-3">{left} songs left</p>
+                {/* <p className="text-white text-center tracking-tight mb-3">{left} songs left</p> */}
                 <h1 className="text-2xl text-white text-center font-bold tracking-tight">{currentSong.name}</h1>
                 <p className="text-xl text-white text-center opacity-70 tracking-tight">{artistsText}</p>
             </div>
