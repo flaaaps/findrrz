@@ -35,7 +35,7 @@ const SongVoter: React.FC<Props> = ({ artists }) => {
                     fullTracks.push(fetchedTracks[0])
                 }
             }
-            setTracks(fullTracks)
+            setTracks([...new Map(fullTracks.map(item => [item["id"], item])).values()])
         }
         fetchArtistsTopTrack()
     }, [artists])
