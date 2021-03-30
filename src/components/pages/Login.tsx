@@ -2,7 +2,7 @@ import React, { useContext, useEffect } from "react"
 import { UserContext } from "../App"
 
 const CLIENT_ID = "ecf2247db8174da0aba4e3e62fdd2f6b"
-const REDIRECT_URI = "http://192.168.1.7:3000"
+const REDIRECT_URI = process.env.NODE_ENV === "development" ? "http://192.168.1.7:3000" : "https://findrrz.netlify.app"
 
 const Login: React.FC = () => {
     const { setUser, setAccessToken } = useContext(UserContext)
