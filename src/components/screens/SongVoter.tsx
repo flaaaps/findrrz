@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react"
 import { getRelatedArtistsTopTracks } from "../../api/spotify"
 import { Artist, Track } from "../../types/spotify"
 import { readVolume, writeVolume } from "../../utils/localStorage"
+import Loading from "../Loading"
 import TrackAudioControls from "../track/AudioControls"
 import TrackAudioPreview from "../track/AudioPreview"
 import TrackBackground from "../track/Background"
@@ -22,11 +23,16 @@ const SongVoter: React.FC<Props> = ({ artists }) => {
     const [artistOffset, setArtistOffset] = useState(1)
     const [blacklist, setBlacklist] = useState<string[]>([])
 
+    const [loading, setLoading] = useState(true)
+
     const x = useMotionValue(0)
     let currentSong = tracks[index]
 
     useEffect(() => {
-        const fetchData = async () => await fetchArtistsTopTracks(artists)
+        const fetchData = async () => {
+            await fetchArtistsTopTracks(artists)
+            setLoading(false)
+        }
         fetchData()
     }, [artists])
 
@@ -102,6 +108,7 @@ const SongVoter: React.FC<Props> = ({ artists }) => {
 
     return (
         <>
+            <Loading loading={loading} />
             <TrackAudioPreview currentSong={currentSong} key={currentSong.id} targetVolume={targetVolume} />
             <TrackDragOverlay x={x} onDragEnd={handleDragEnd} />
             <TrackAudioControls volume={targetVolume} setVolume={setVolume} />
