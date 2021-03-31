@@ -22,7 +22,7 @@ const Login: React.FC = () => {
                 setAccessToken!(accessToken)
                 localStorage.setItem("expires_at", String(expiresAt))
                 // clear url
-                window.history.pushState({}, document.title, "./")
+                window.history.pushState({}, document.title, "/")
             }
         }
     }, [setUser, setAccessToken])
