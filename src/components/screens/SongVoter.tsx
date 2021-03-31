@@ -43,7 +43,7 @@ const SongVoter: React.FC<Props> = ({ artists }) => {
 
     useEffect(() => {
         console.log(`We now have ${likedSongs.length} liked tracks and an song index of ${index}`)
-        if (tracks.length === index && tracks.length !== 0) {
+        if (tracks.length - 5 === index && tracks.length !== 0) {
             console.log("Okay, we're done!!")
             fetchArtistsTopTracks(likedSongs.map(song => song.artists[0]).slice(0, artistOffset * 3))
             setArtistOffset(prev => prev + 1)
@@ -59,12 +59,17 @@ const SongVoter: React.FC<Props> = ({ artists }) => {
                 fullTracks.push(fetchedTracks[0])
             }
         }
-        setTracks(
-            [...new Map(fullTracks.map(item => [item["id"], item])).values()].filter(
-                item => !blacklist.includes(item.id)
-            )
-        )
-        setIndex(0)
+        setTracks(prev => [
+            ...prev,
+            ...new Map(
+                fullTracks
+                    .filter(i => i && i)
+                    .filter(item => !blacklist.includes(item.id))
+                    .map(track => {
+                        return [track["id"], track]
+                    })
+            ).values(),
+        ])
     }
 
     const setVolume = (value: number) => {
