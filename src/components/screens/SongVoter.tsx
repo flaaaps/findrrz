@@ -11,6 +11,8 @@ import TrackBackground from "../track/Background"
 import TrackDetails from "../track/Details"
 import TrackDragOverlay from "../track/DragOverlay"
 
+import "../../utils/array"
+
 type Props = {
     artists: Artist[]
 }
@@ -65,17 +67,19 @@ const SongVoter: React.FC<Props> = ({ artists }) => {
                 fullTracks.push(fetchedTracks[0])
             }
         }
-        setTracks(prev => [
-            ...prev,
-            ...new Map(
-                fullTracks
-                    .filter(i => i && i)
-                    .filter(item => !blacklist.includes(item.id))
-                    .map(track => {
-                        return [track["id"], track]
-                    })
-            ).values(),
-        ])
+        setTracks(prev =>
+            [
+                ...prev,
+                ...new Map(
+                    fullTracks
+                        .filter(i => i && i)
+                        .filter(item => !blacklist.includes(item.id))
+                        .map(track => {
+                            return [track["id"], track]
+                        })
+                ).values(),
+            ].shuffle()
+        )
     }
 
     const setVolume = (value: number) => {
@@ -100,20 +104,19 @@ const SongVoter: React.FC<Props> = ({ artists }) => {
         if (x.get() > 30) take()
         else if (x.get() < -30) next()
     }
-    if (!tracks || tracks.length === 0) {
-        return <div>Loading...</div>
-    }
-
-    if (!currentSong) return <></>
 
     return (
         <>
             <Loading loading={loading} />
-            <TrackAudioPreview currentSong={currentSong} key={currentSong.id} targetVolume={targetVolume} />
-            <TrackDragOverlay x={x} onDragEnd={handleDragEnd} />
-            <TrackAudioControls volume={targetVolume} setVolume={setVolume} />
-            <TrackDetails x={x} currentSong={currentSong} left={tracks.length - index} />
-            <TrackBackground currentSong={currentSong} />
+            {currentSong && tracks.length > 0 && (
+                <>
+                    <TrackAudioPreview currentSong={currentSong} key={currentSong.id} targetVolume={targetVolume} />
+                    <TrackDragOverlay x={x} onDragEnd={handleDragEnd} />
+                    <TrackAudioControls volume={targetVolume} setVolume={setVolume} />
+                    <TrackDetails x={x} currentSong={currentSong} left={tracks.length - index} />
+                    <TrackBackground currentSong={currentSong} />
+                </>
+            )}
         </>
     )
 }
