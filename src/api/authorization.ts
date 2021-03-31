@@ -17,6 +17,7 @@ export function getAccessToken(): string | null {
 
 export function logout() {
     localStorage.removeItem("user_access_token")
+    localStorage.removeItem("expires_at")
 }
 
 export function authorizationHeaders() {
