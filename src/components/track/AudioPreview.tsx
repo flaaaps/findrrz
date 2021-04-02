@@ -89,7 +89,6 @@ const TrackAudioPreview: React.FC<Props> = ({ currentSong, targetVolume }) => {
             if (interruped) return
             interruped = true
             fadeInRef.current.interrupt()
-            audio.pause()
             fadeOutRef.current.start().then(() => audio.pause())
         }
     }, [currentSong])
@@ -104,16 +103,20 @@ const TrackAudioPreview: React.FC<Props> = ({ currentSong, targetVolume }) => {
     }, [targetVolume, currentSong])
 
     return (
-        audioRef.current && (
-            <>
-                <div className="absolute bottom-0 left-0 w-full z-30 h-1.5 bg-primary-500" />
-                <motion.div
-                    className="absolute bottom-0 left-0 z-30 h-1.5 bg-primary-700"
-                    animate={{ width: `${progress}%` }}
-                    transition={{ ease: "linear", duration: progress === 0 ? 0 : 1 }}
-                />
-            </>
-        )
+        <>
+            progress && (
+            <motion.div
+                animate={{ opacity: 1 }}
+                initial={{ opacity: 0 }}
+                className="absolute bottom-0 left-0 w-full z-30 h-1.5 bg-primary-500"
+            />
+            <motion.div
+                className="absolute bottom-0 left-0 z-30 h-1.5 bg-primary-700"
+                animate={{ width: `${progress}%` }}
+                transition={{ ease: "linear", duration: progress === 0 ? 0 : 1 }}
+            />
+            )
+        </>
     )
 }
 
