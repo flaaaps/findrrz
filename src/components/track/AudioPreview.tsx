@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react"
 import { Track } from "../../types/spotify"
 import interpolate, { Interpolation } from "../../utils/interpolate"
 import { motion } from "framer-motion"
+import { isMobile } from "react-device-detect"
 
 type Props = {
     currentSong: Track
@@ -41,6 +42,11 @@ const TrackAudioPreview: React.FC<Props> = ({ currentSong, targetVolume }) => {
 
         const audio: HTMLAudioElement = new Audio(previewUrl)
         audioRef.current = audio
+        audio.load()
+
+        if (isMobile) {
+            audio.volume = 0.1
+        }
 
         let looping = false
         const listener = async () => {
@@ -83,6 +89,7 @@ const TrackAudioPreview: React.FC<Props> = ({ currentSong, targetVolume }) => {
             if (interruped) return
             interruped = true
             fadeInRef.current.interrupt()
+            audio.pause()
             fadeOutRef.current.start().then(() => audio.pause())
         }
     }, [currentSong])
