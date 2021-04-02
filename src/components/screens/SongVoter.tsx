@@ -65,7 +65,8 @@ const SongVoter: React.FC<Props> = ({ artists }) => {
         for (let artist of artistsToFetch) {
             for (let i = 0; i <= 19; i++) {
                 const fetchedTracks = await getRelatedArtistsTopTracks(artist.id, i)
-                fullTracks.push(fetchedTracks[0])
+                const res = await fetch(fetchedTracks[0].preview_url)
+                if (res.status !== 404) fullTracks.push(fetchedTracks[0])
             }
         }
         setTracks(prev =>
