@@ -10,6 +10,7 @@ import TrackAudioPreview from "../track/AudioPreview"
 import TrackBackground from "../track/Background"
 import TrackDetails from "../track/Details"
 import TrackDragOverlay from "../track/DragOverlay"
+import { isMobile } from "react-device-detect"
 
 import "../../utils/array"
 
@@ -112,7 +113,7 @@ const SongVoter: React.FC<Props> = ({ artists }) => {
                 <>
                     <TrackAudioPreview currentSong={currentSong} key={currentSong.id} targetVolume={targetVolume} />
                     <TrackDragOverlay x={x} onDragEnd={handleDragEnd} />
-                    <TrackAudioControls volume={targetVolume} setVolume={setVolume} />
+                    {!isMobile && <TrackAudioControls volume={targetVolume} setVolume={setVolume} />}
                     <TrackDetails x={x} currentSong={currentSong} left={tracks.length - index} />
                     <TrackBackground currentSong={currentSong} />
                 </>
