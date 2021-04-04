@@ -4,6 +4,7 @@ import React, { useEffect, useRef, useState } from "react"
 import { Track } from "../../types/spotify"
 import interpolate, { Interpolation } from "../../utils/interpolate"
 import { motion } from "framer-motion"
+import { isMobile } from "react-device-detect"
 
 type Props = {
     currentSong: Track
@@ -41,6 +42,11 @@ const TrackAudioPreview: React.FC<Props> = ({ currentSong, targetVolume }) => {
 
         const audio: HTMLAudioElement = new Audio(previewUrl)
         audioRef.current = audio
+        audio.load()
+
+        if (isMobile) {
+            audio.volume = 0.1
+        }
 
         let looping = false
         const listener = async () => {
@@ -97,16 +103,20 @@ const TrackAudioPreview: React.FC<Props> = ({ currentSong, targetVolume }) => {
     }, [targetVolume, currentSong])
 
     return (
-        audioRef.current && (
-            <>
-                <div className="absolute bottom-0 left-0 w-full z-30 h-1.5 bg-primary-500" />
-                <motion.div
-                    className="absolute bottom-0 left-0 z-30 h-1.5 bg-primary-700"
-                    animate={{ width: `${progress}%` }}
-                    transition={{ ease: "linear", duration: progress === 0 ? 0 : 1 }}
-                />
-            </>
-        )
+        <>
+            progress && (
+            <motion.div
+                animate={{ opacity: 1 }}
+                initial={{ opacity: 0 }}
+                className="absolute bottom-0 left-0 w-full z-30 h-1.5 bg-primary-500"
+            />
+            <motion.div
+                className="absolute bottom-0 left-0 z-30 h-1.5 bg-primary-700"
+                animate={{ width: `${progress}%` }}
+                transition={{ ease: "linear", duration: progress === 0 ? 0 : 1 }}
+            />
+            )
+        </>
     )
 }
 
