@@ -61,7 +61,7 @@ const SongVoter: React.FC<Props> = ({ artists }) => {
 
     const fetchArtistsTopTracks = async (artistsToFetch: Artist[]) => {
         console.log("Fetching new artists...")
-        const fullTracks: Track[] = []
+        let fullTracks: Track[] = []
         for (let artist of artistsToFetch) {
             for (let i = 0; i <= 19; i++) {
                 const fetchedTracks = await getRelatedArtistsTopTracks(artist.id, i)
@@ -69,19 +69,17 @@ const SongVoter: React.FC<Props> = ({ artists }) => {
                 if (res.status !== 404) fullTracks.push(fetchedTracks[0])
             }
         }
-        setTracks(prev =>
-            [
-                ...prev,
-                ...new Map(
+        setTracks(prev => [
+            ...prev,
+            ...Array.from(
+                new Map(
                     fullTracks
                         .filter(i => i && i)
                         .filter(item => !blacklist.includes(item.id))
-                        .map(track => {
-                            return [track["id"], track]
-                        })
-                ).values(),
-            ].shuffle()
-        )
+                        .map(track => [track["id"], track])
+                ).values()
+            ).shuffle(),
+        ])
     }
 
     const setVolume = (value: number) => {
