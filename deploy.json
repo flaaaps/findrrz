@@ -1,0 +1,7 @@
+{
+    "destination": "/var/www/findrrz",
+    "buildDir": "build",
+    "commands": ["npm i -g yarn", "yarn install", "yarn build"],
+    "productionUrl": "https://findrrz.hardboun.de/",
+    "previewUrl": "https://%0.preview.findrrz.hardboun.de/"
+}
