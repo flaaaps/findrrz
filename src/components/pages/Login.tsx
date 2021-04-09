@@ -36,7 +36,7 @@ const Login: React.FC = () => {
     return (
         <>
             <div className="px-6 mt-20">
-                <button onClick={() => authorizeWithSpotify()}>Login</button>
+                <button onClick={() => authorizeWithSpotify()}>Login with Spotify</button>
             </div>
         </>
     )
