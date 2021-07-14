@@ -52,25 +52,32 @@ const SongVoter: React.FC<Props> = ({ artists }) => {
 
     useEffect(() => {
         console.log(`We now have ${likedSongs.length} liked tracks and an song index of ${index}`)
+        if (tracks.length === index) setLoading(true)
         if (tracks.length - 5 === index && tracks.length !== 0) {
             console.log("Okay, we're done!!")
-            fetchArtistsTopTracks(likedSongs.map(song => song.artists[0]).slice(0, artistOffset * 3))
+            fetchArtistsTopTracks(likedSongs.map(song => song.artists[0]).slice(0, artistOffset * 3)).then(() => {
+                setLoading(false)
+            })
             setArtistOffset(prev => prev + 1)
         }
     }, [index])
 
     const fetchArtistsTopTracks = async (artistsToFetch: Artist[]) => {
-        console.log("Fetching new artists...")
+        console.log(
+            "Fetching new tracks by",
+            new Intl.ListFormat("en").format(artistsToFetch.map(artist => artist.name))
+        )
         let fullTracks: Track[] = []
         for (let artist of artistsToFetch) {
             for (let i = 0; i <= 19; i++) {
                 const fetchedTracks = await getRelatedArtistsTopTracks(artist.id, i)
-                const res = await fetch(fetchedTracks[0].preview_url)
-                if (res.status !== 404) fullTracks.push(fetchedTracks[0])
+                const randomItemIndex = Math.floor(Math.random() * fetchedTracks.length)
+                console.log("Song:", fetchedTracks[randomItemIndex].name)
+                const res = await fetch(fetchedTracks[randomItemIndex].preview_url)
+                if (res.status !== 404) fullTracks.push(fetchedTracks[randomItemIndex])
             }
         }
-        setTracks(prev => [
-            ...prev,
+        const filteredTracks = [
             ...Array.from(
                 new Map(
                     fullTracks
@@ -78,8 +85,10 @@ const SongVoter: React.FC<Props> = ({ artists }) => {
                         .filter(item => !blacklist.includes(item.id))
                         .map(track => [track["id"], track])
                 ).values()
-            ).shuffle(),
-        ])
+            ),
+        ]
+        console.log(`Fetched ${filteredTracks.length} new tracks`)
+        setTracks(prev => [...prev, ...filteredTracks.shuffle()])
     }
 
     const setVolume = (value: number) => {
@@ -107,8 +116,8 @@ const SongVoter: React.FC<Props> = ({ artists }) => {
 
     return (
         <>
-            <Loading loading={loading} />
-            {currentSong && tracks.length > 0 && (
+            <Loading loading={loading} cubeDelay={tracks.length > 0 ? 0 : 1} />
+            {!loading && currentSong && tracks.length > 0 && (
                 <>
                     <TrackAudioPreview currentSong={currentSong} key={currentSong.id} targetVolume={targetVolume} />
                     <TrackDragOverlay x={x} onDragEnd={handleDragEnd} />
