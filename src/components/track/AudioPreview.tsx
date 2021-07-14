@@ -104,19 +104,17 @@ const TrackAudioPreview: React.FC<Props> = ({ currentSong, targetVolume }) => {
 
     return (
         <>
-            <>
-                <motion.div
-                    animate={{ opacity: 1 }}
-                    initial={{ opacity: 0 }}
-                    className="absolute bottom-0 left-0 w-full z-30 h-1.5 bg-primary-500"
-                />
-                <motion.div
-                    className="absolute bottom-0 left-0 z-30 h-1.5 bg-primary-700"
-                    animate={{ width: isNaN(progress) ? `0%` : `${progress}%` }}
-                    initial={{ width: "0%" }}
-                    transition={{ ease: "linear", duration: progress === 0 ? 0 : 1 }}
-                />
-            </>
+            <motion.div
+                animate={{ opacity: 1 }}
+                initial={{ opacity: 0 }}
+                className="absolute bottom-0 left-0 w-full z-30 h-1.5 bg-primary-500"
+            />
+            <motion.div
+                className="absolute bottom-0 left-0 z-30 h-1.5 bg-primary-700"
+                animate={{ width: isNaN(progress) ? `0%` : `${progress}%` }}
+                initial={{ width: "0%" }}
+                transition={{ ease: "linear", duration: progress === 0 ? 0 : 1 }}
+            />
         </>
     )
 }
