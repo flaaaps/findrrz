@@ -2,10 +2,11 @@ import React from "react"
 import { motion, AnimatePresence } from "framer-motion"
 
 type Props = {
-    loading: boolean
+    loading: boolean,
+    cubeDelay?: number
 }
 
-const Loading: React.FC<Props> = ({ loading }) => (
+const Loading: React.FC<Props> = ({ loading, cubeDelay = 0 }) => (
     <div className="loader">
         <AnimatePresence>
             {loading && (
@@ -20,7 +21,7 @@ const Loading: React.FC<Props> = ({ loading }) => (
                         <motion.div
                             animate={{ scale: 1, opacity: 1 }}
                             initial={{ scale: 0.2, opacity: 0 }}
-                            transition={{ duration: 0.25, delay: 1.5 }}
+                            transition={{ duration: 0.25, delay: cubeDelay }}
                         >
                             <div className="animation">
                                 <div className="sk-cube-grid">
